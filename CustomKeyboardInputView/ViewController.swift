@@ -7,8 +7,13 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+class ViewController: UIViewController, KeyboardInputAccessoryViewProtocol {
+  
+    // Create lazy view
+    private lazy var keyboardView: KeyboardInputAccessoryView = {
+        return KeyboardInputAccessoryView.view(controller: self)
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -16,11 +21,31 @@ class ViewController: UIViewController {
 
     // MARK: - Custom keyboard input view
     override var inputAccessoryView: UIView? {
-        return <Here will come our custom input view>
+        return keyboardView.canBecomeFirstResponder ? keyboardView : nil
     }
     
     override var canBecomeFirstResponder: Bool {
-        return <Here we will tell if this screen can or can't become first responder>
+        return keyboardView.canBecomeFirstResponder
+    }
+    
+    // MARK: IBAction
+    @IBAction func showKeyboard(_ sender: UIButton) {
+        self.keyboardView.showKeyboard()
+    }
+    
+    @IBAction func hideKeyboard(_ sender: UIButton) {
+        self.keyboardView.dismissKeyboard()
+    }
+    
+    // MARK: - Keyboard delegate
+    func send(data type: String) {
+        // Here we send the data from our keyboard
+    }
+    
+    func scrollView() -> UIScrollView? {
+        // We don't have any scroll view or table view, but if you have just pass the reference here :-)
+        // For example would be: self.tableView
+        return nil
     }
 }
 
